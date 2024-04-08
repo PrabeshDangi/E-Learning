@@ -6,18 +6,22 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../Controllers/categoryController");
-const verifyJWT = require("../middlewares/authMiddleware");
+const { verifyJWT, authorizeRoles } = require("../middlewares/authMiddleware");
 const router = Router();
-
-/************TODO: ROLE BASED AUTH******* */
 
 //Public Routes
 router.route("/getall").get(getAllCategories);
+router.route("/get/:id").get(getCategoryById);
 
 //private Routes
-router.route("/get/:id").get(verifyJWT, getCategoryById);
-router.route("/create").post(verifyJWT, createCategory);
-router.route("/update/:id").post(verifyJWT, updateCategory);
-router.route("/delete/:id").post(verifyJWT, deleteCategory);
+router
+  .route("/create")
+  .post(verifyJWT, authorizeRoles("SUPERADMIN"), createCategory);
+router
+  .route("/update/:id")
+  .post(verifyJWT, authorizeRoles("SUPERADMIN"), updateCategory);
+router
+  .route("/delete/:id")
+  .post(verifyJWT, authorizeRoles("SUPERADMIN"), deleteCategory);
 
 module.exports = router;

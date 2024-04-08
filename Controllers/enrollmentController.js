@@ -2,10 +2,12 @@ const asyncHandler = require("express-async-handler");
 const prisma = require("../prisma/index");
 const ApiResponse = require("../utils/ApiResponse");
 const ApiError = require("../utils/ApiError");
+const sendEmail = require("../Services/emailService");
 
 //Enrolled to Course
 const enrollToCourse = asyncHandler(async (req, res) => {
-  const courseId = parseInt(req.params.courseId);
+  const courseId = parseInt(req.params.id);
+  // const userAvailable=req.user
 
   if (!courseId) {
     throw new ApiError(400, "Course ID is required.");
@@ -44,9 +46,30 @@ const enrollToCourse = asyncHandler(async (req, res) => {
     },
   });
 
+  // Fetch the course name and description
+  const courseDetails = {
+    name: course.title,
+    description: course.description,
+  };
+
+  //Send Email
+  const Subject = "Enrollment Successful!!";
+  const HtmlContent = `Dear <strong> ${req.user.name}</strong>,<br> You have been successfully enrolled to our ${course.title} course. Feel free to reach to us for further enquiry!!<br>Happy learning buddy✌🏻`;
+  const Recipient = req.user.email;
+
+  sendEmail(Subject, HtmlContent, Recipient)
+    .then(() => console.log("Course enrollment email sent successfully"))
+    .catch((err) => console.error("Error sending email:", err));
+
   res
     .status(200)
-    .json(new ApiResponse(200, newEnrollment, "Enrollment successful."));
+    .json(
+      new ApiResponse(
+        200,
+        { ...newEnrollment, course: courseDetails, userName: req.user.name },
+        "Enrollment successful."
+      )
+    );
 });
 
 //Get enrolled courses
@@ -60,18 +83,46 @@ const getEnrolledCourses = asyncHandler(async (req, res) => {
       userId: req.user.id,
     },
     include: {
-      course: true,
+      course: {
+        include: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
+
+  const totalCourses = enrolledCourses.length;
   res
     .status(200)
     .json(
       new ApiResponse(
         200,
         enrolledCourses,
-        "Enrolled courses fetched successfully."
+        `Enrolled ${totalCourses} courses fetched successfully.`
       )
     );
 });
 
-module.exports = { enrollToCourse, getEnrolledCourses };
+// **************************TODO DELETE THIS CTRLER
+const deleteEnroll = async (req, res) => {
+  const enrollId = parseInt(req.params.id);
+  if (!enrollId) {
+    return res.status(404).json({
+      message: "No details found!!",
+    });
+  }
+  await prisma.enrollment.delete({
+    where: {
+      id: enrollId,
+    },
+  });
+  res.status(200).json({
+    message: "Enrollment data deleted!!",
+  });
+};
+
+module.exports = { enrollToCourse, getEnrolledCourses, deleteEnroll };

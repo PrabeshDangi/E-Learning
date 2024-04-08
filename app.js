@@ -10,7 +10,7 @@ const app = express();
 //Regular middlewares
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true, limit: "20kb" }));
-//app.use(upload.none()); //This parse form data with no files...
+//app.use(upload.any()); //This parse form data with no files or with file...
 app.use(express.static("Public"));
 app.use(cookieParser());
 

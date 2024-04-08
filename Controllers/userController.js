@@ -11,10 +11,12 @@ const extractPublicId = require("../helper/extractPublicId");
 const sendtoken = require("../utils/sendAuthToken");
 const ApiResponse = require("../utils/ApiResponse");
 const ApiError = require("../utils/ApiError");
+const sendEmail = require("../Services/emailService");
+const { v4: uuidv4 } = require("uuid");
 
 //Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Validate user input against the auth schema
   const { error, value } = validateAuth(req.body);
@@ -41,14 +43,11 @@ const registerUser = asyncHandler(async (req, res) => {
   //console.log(req.file);
 
   if (!pictureLocalPath) {
-    throw new ApiError(400, "Cover Image not available!!");
+    throw new ApiError(400, "Profile Image not available!!");
   }
 
-  //console.log("Data yeha samma chha ki naai");
   const ProfileImage = await cloudinaryFileUpload(pictureLocalPath);
-  //console.log(ProfileImage);
 
-  //Just for safety, checking if ProfileImage is uplaoded or not
   if (!ProfileImage.url) {
     throw new ApiError(400, "Profile-Image uploading failed!!");
   }
@@ -61,6 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
       email: email,
       password: encryptedPw,
       picture: ProfileImage.url,
+      role,
     },
   });
 
@@ -76,6 +76,15 @@ const registerUser = asyncHandler(async (req, res) => {
       role: true,
     },
   });
+
+  //Email Service
+  const Subject = "Registration Successful!!";
+  const HtmlContent = `Dear <strong> ${name}</strong><br> You have been registered to our E-learning platform.Thank you for joining us!`;
+  const Recipient = email;
+
+  sendEmail(Subject, HtmlContent, Recipient)
+    .then(() => console.log("Registration emails sent successfully"))
+    .catch((err) => console.error("Error sending registration emails:", err));
 
   return res
     .status(201)
@@ -237,6 +246,91 @@ const updateImage = asyncHandler(async (req, res) => {
   await cloudinaryFileDelete(public_id);
 });
 
+//***************TODO:DELETE THIS */
+//Delete User
+const deleteuser = async (req, res) => {
+  const userId = parseInt(req.params.id);
+  if (!userId) {
+    res.status(404).json({
+      message: "User not available",
+    });
+  }
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+  res.status(200).json({
+    message: "User deleted successfully!",
+  });
+};
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const userAvailable = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!userAvailable) {
+    throw new ApiError(404, "User not found!!");
+  }
+
+  //Generate reset Token
+  const resetToken = uuidv4();
+  const resetTokenExpiration = new Date(Date.now() + 600000); //For 10 minutes
+
+  await prisma.passwordReset.create({
+    data: {
+      userId: userAvailable.id,
+      token: resetToken,
+      expiresAt: resetTokenExpiration,
+    },
+  });
+
+  //Email service
+  const Subject = "Password Reset Request";
+  const HtmlContent = `<strong>CONFIDENTIAL!!</strong><br> Your password reset token is: ${resetToken}. <br>Warning: Do not share this token with anyone.`;
+  const Recipient = email;
+
+  sendEmail(Subject, HtmlContent, Recipient)
+    .then(() => console.log("Password reset email sent successfully!!"))
+    .catch((err) => console.error("Error sending registration emails:", err));
+
+  res.status(200).json(new ApiResponse(200, {}, "Reset email sent!!"));
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token: resetToken, password } = req.body;
+
+  if (!resetToken) {
+    throw new ApiError(400, "Reset token is required");
+  }
+
+  const resetRecord = await prisma.passwordReset.findUnique({
+    where: { token: resetToken },
+  });
+
+  if (!resetRecord || resetRecord.expiresAt < new Date()) {
+    throw new ApiError(400, "Invalid or expired token!!");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await prisma.user.update({
+    where: { id: resetRecord.userId },
+    data: { password: hashedPassword },
+  });
+
+  await prisma.passwordReset.delete({ where: { token: resetToken } });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password reset successfully!!"));
+});
+
 module.exports = {
   registerUser,
   logInUser,
@@ -244,4 +338,7 @@ module.exports = {
   updateUserDetails,
   updateImage,
   getProfileDetails,
+  deleteuser,
+  forgotPassword,
+  resetPassword,
 };

@@ -6,6 +6,7 @@ const ApiResponse = require("../utils/ApiResponse");
 // create a new category
 const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
+  console.log(name);
 
   const categoryAvailable = await prisma.category.findUnique({
     where: {
@@ -15,10 +16,6 @@ const createCategory = asyncHandler(async (req, res) => {
   if (categoryAvailable) {
     throw new ApiError(400, "Category already exists!!");
   }
-
-  // if (!name) {
-  //   throw new ApiError(400, "Please provide the category name!!");
-  // }
 
   const newCategory = await prisma.category.create({
     data: {
@@ -36,7 +33,7 @@ const getAllCategories = asyncHandler(async (req, res) => {
   const categories = await prisma.category.findMany();
 
   // Category sangai accociated course fetch garna ko lagi!!
-  //  const categoriesWithCourses = await prisma.category.findMany({
+  // const categoriesWithCourses = await prisma.category.findMany({
   //   include: {
   //     courses: true,
   //   },

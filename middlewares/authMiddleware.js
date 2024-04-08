@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const prisma = require("../prisma/index");
+const ApiError = require("../utils/ApiError");
 
 const verifyJWT = async (req, res, next) => {
   try {
@@ -9,8 +10,7 @@ const verifyJWT = async (req, res, next) => {
     //console.log(token);
 
     if (!token) {
-      res.status(401);
-      throw new Error("Unauthorized request error!!");
+      throw new ApiError(401, "Unauthorized request error!!");
     }
 
     const jwtDecodedInfo = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -22,8 +22,7 @@ const verifyJWT = async (req, res, next) => {
     });
 
     if (!user) {
-      res.status(401);
-      throw new Error("Unauthorized access token!!");
+      throw new ApiError(401, "Unauthorized access token!!");
     }
 
     req.user = user;
@@ -35,4 +34,29 @@ const verifyJWT = async (req, res, next) => {
   }
 };
 
-module.exports = verifyJWT;
+const authorizeRoles = (role) => {
+  return (req, res, next) => {
+    if (req.user.role !== role) {
+      return res
+        .status(403)
+        .json({
+          message: `${req.user.role} cannot proceed with this request!!`,
+        });
+    }
+    next();
+  };
+};
+
+//For multiple roles to get access
+// const authorizeRoles = (...roles) => {
+//   return (req, res, next) => {
+//     if (!roles.includes(req.user.role)) {
+//       res
+//         .status(403)
+//         .json({ message: `${req.user.role} cannot access this file` });
+//     }
+//     next();
+//   };
+// };
+
+module.exports = { verifyJWT, authorizeRoles };

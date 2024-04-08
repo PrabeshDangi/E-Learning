@@ -5,7 +5,8 @@ const authSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
   name: Joi.string().min(4).max(30).required(),
-  picture: Joi.string().required(),
+  role: Joi.string().valid("USER", "SUPERADMIN").optional(),
+  // picture: Joi.string().required(),
 });
 
 // Function to validate email and password

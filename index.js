@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
-//require("./Database/dbConnection");
 const app = require("./app");
 
 app.on("error", (e) => {

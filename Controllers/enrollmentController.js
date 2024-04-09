@@ -107,22 +107,4 @@ const getEnrolledCourses = asyncHandler(async (req, res) => {
     );
 });
 
-// **************************TODO DELETE THIS CTRLER
-const deleteEnroll = async (req, res) => {
-  const enrollId = parseInt(req.params.id);
-  if (!enrollId) {
-    return res.status(404).json({
-      message: "No details found!!",
-    });
-  }
-  await prisma.enrollment.delete({
-    where: {
-      id: enrollId,
-    },
-  });
-  res.status(200).json({
-    message: "Enrollment data deleted!!",
-  });
-};
-
-module.exports = { enrollToCourse, getEnrolledCourses, deleteEnroll };
+module.exports = { enrollToCourse, getEnrolledCourses };

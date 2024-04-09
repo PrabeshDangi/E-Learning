@@ -40,7 +40,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const pictureLocalPath = req.file?.path;
-  //console.log(req.file);
 
   if (!pictureLocalPath) {
     throw new ApiError(400, "Profile Image not available!!");
@@ -54,6 +53,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const encryptedPw = await bcrypt.hash(password, 10);
 
+  //In case we want specific emails only to be superadmin:
+  // const emailPattern = /@aeonaxy.com$/;
+  // const isSuperadmin = emailPattern.test(email);
+
   const newuser = await prisma.user.create({
     data: {
       name: name,
@@ -61,6 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password: encryptedPw,
       picture: ProfileImage.url,
       role,
+      //role: isSuperadmin ? 'SUPERADMIN' : role,
     },
   });
 
@@ -212,7 +216,6 @@ const updateImage = asyncHandler(async (req, res) => {
   }
 
   const user = req.user;
-  //console.log(user);
   const oldImageUrl = user.picture;
 
   //extract public_id as:
@@ -245,25 +248,6 @@ const updateImage = asyncHandler(async (req, res) => {
     );
   await cloudinaryFileDelete(public_id);
 });
-
-//***************TODO:DELETE THIS */
-//Delete User
-const deleteuser = async (req, res) => {
-  const userId = parseInt(req.params.id);
-  if (!userId) {
-    res.status(404).json({
-      message: "User not available",
-    });
-  }
-  await prisma.user.delete({
-    where: {
-      id: userId,
-    },
-  });
-  res.status(200).json({
-    message: "User deleted successfully!",
-  });
-};
 
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -338,7 +322,6 @@ module.exports = {
   updateUserDetails,
   updateImage,
   getProfileDetails,
-  deleteuser,
   forgotPassword,
   resetPassword,
 };

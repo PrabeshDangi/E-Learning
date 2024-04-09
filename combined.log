@@ -1,0 +1,46 @@
+{"level":"info","message":"POST /user/login"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:114:11"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:114:11"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:114:11"}
+{"level":"info","message":"POST /user/login"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:114:11"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:114:11"}
+{"level":"info","message":"GET /course/allcourses"}
+{"level":"info","message":"GET /course/allcourses?category=science"}
+{"level":"info","message":"GET /course/allcourses?category=Science"}
+{"level":"info","message":"POST /user/login"}
+{"level":"error","message":"Error: Invalid password!!\n    at C:\\E-learning\\Controllers\\userController.js:118:11"}
+{"level":"info","message":"POST /user/login"}
+{"level":"info","message":"POST /course/create"}
+{"level":"info","message":"POST /course/create"}
+{"level":"info","message":"POST /course/create"}
+{"level":"info","message":"POST /course/create"}
+{"level":"info","message":"POST /course/create"}
+{"level":"info","message":"GET /course/allcourses?category=Science"}
+{"level":"info","message":"GET /course/allcourses"}
+{"level":"info","message":"GET /course/allcourses?page=2"}
+{"level":"info","message":"POST /enrollment/getcourse"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINER"}
+{"level":"error","message":"PrismaClientValidationError: \nInvalid `prisma.course.findMany()` invocation in\nC:\\E-learning\\Controllers\\courseController.js:51:42\n\n  48   orderBy.popularity = \"asc\";\n  49 }\n  50 \n→ 51 const allCourses = await prisma.course.findMany({\n       skip: 0,\n       take: 5,\n       where: {\n         categoryId: 1,\n         level: \"BEGINER\"\n                ~~~~~~~~~\n       },\n       orderBy: {\n         popularity: \"desc\"\n       },\n       include: {\n         category: true\n       }\n     })\n\nInvalid value for argument `level`. Expected Level.\n    at Tn (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:115:5888)\n    at In.handleRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6510)\n    at In.handleAndLogRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6188)\n    at In.request (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:5896)\n    at async l (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:127:11167)\n    at async C:\\E-learning\\Controllers\\courseController.js:51:22"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINER"}
+{"level":"error","message":"ReferenceError: level is not defined\n    at C:\\E-learning\\Controllers\\courseController.js:35:37"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINNER"}
+{"level":"error","message":"ReferenceError: level is not defined\n    at C:\\E-learning\\Controllers\\courseController.js:35:37"}
+{"level":"info","message":"GET /course/allcourses?category=Science"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINNER"}
+{"level":"error","message":"ReferenceError: level is not defined\n    at C:\\E-learning\\Controllers\\courseController.js:35:37"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINNER"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINER"}
+{"level":"error","message":"PrismaClientValidationError: \nInvalid `prisma.course.findMany()` invocation in\nC:\\E-learning\\Controllers\\courseController.js:51:42\n\n  48   orderBy.popularity = \"asc\";\n  49 }\n  50 \n→ 51 const allCourses = await prisma.course.findMany({\n       skip: 0,\n       take: 5,\n       where: {\n         OR: [\n           {\n             categoryId: 1\n           },\n           {\n             level: \"BEGINER\"\n           },\n           {}\n         ]\n       },\n       orderBy: {\n         popularity: \"desc\"\n       },\n       include: {\n         category: true\n       }\n     })\n\nInvalid value for argument `level`. Expected Level.\n    at Tn (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:115:5888)\n    at In.handleRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6510)\n    at In.handleAndLogRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6188)\n    at In.request (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:5896)\n    at async l (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:127:11167)\n    at async C:\\E-learning\\Controllers\\courseController.js:51:22"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINER"}
+{"level":"error","message":"PrismaClientValidationError: \nInvalid `prisma.course.findMany()` invocation in\nC:\\E-learning\\Controllers\\courseController.js:51:42\n\n  48   orderBy.popularity = \"asc\";\n  49 }\n  50 \n→ 51 const allCourses = await prisma.course.findMany({\n       skip: 0,\n       take: 5,\n       where: {\n         OR: [\n           {\n             categoryId: 1\n           },\n           {\n             level: \"BEGINER\"\n           },\n           {}\n         ]\n       },\n       orderBy: {\n         popularity: \"desc\"\n       },\n       include: {\n         category: true\n       }\n     })\n\nInvalid value for argument `level`. Expected Level.\n    at Tn (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:115:5888)\n    at In.handleRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6510)\n    at In.handleAndLogRequestError (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:6188)\n    at In.request (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:122:5896)\n    at async l (C:\\E-learning\\node_modules\\@prisma\\client\\runtime\\library.js:127:11167)\n    at async C:\\E-learning\\Controllers\\courseController.js:51:22"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINNER"}
+{"level":"info","message":"GET /course/allcourses?category=Science&levl=BEGINNER"}
+{"level":"info","message":"GET /course/allcourses?category=Science&levl=BEGINNER"}
+{"level":"info","message":"GET /course/allcourses?category=Science&levl=BEGINNER"}
+{"level":"info","message":"GET /course/allcourses?category=Science&level=BEGINNER"}

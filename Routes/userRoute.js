@@ -8,7 +8,6 @@ const {
   updateUserDetails,
   updateImage,
   getProfileDetails,
-  deleteuser,
   forgotPassword,
   resetPassword,
 } = require("../Controllers/userController");
@@ -18,7 +17,6 @@ const { verifyJWT } = require("../middlewares/authMiddleware");
 router.route("/signup").post(upload.single("picture"), registerUser);
 router.route("/login").post(logInUser);
 router.route("/logout").post(logOutUser);
-//router.route("/delete/:id").post(deleteuser);
 router.route("/forgotpassword").post(forgotPassword);
 router.route("/resetpassword").post(resetPassword);
 

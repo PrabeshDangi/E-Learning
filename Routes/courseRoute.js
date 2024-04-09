@@ -10,8 +10,6 @@ const { verifyJWT, authorizeRoles } = require("../middlewares/authMiddleware");
 
 const router = Router();
 
-/************TODO: ROLE BASED AUTH******* */
-
 //Public Routes
 router.route("/allcourses").get(getAllCourses);
 router.route("/getcourse/:id").get(getCourse);

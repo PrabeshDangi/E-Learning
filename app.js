@@ -16,6 +16,11 @@ app.use(cookieParser());
 //Logger
 app.use(requestLogger);
 
+//Just for the sake of home page view:
+app.get("/", (req, res) => {
+  res.json({ message: "Hello from E-learning platform!!!" });
+});
+
 //Importing Routes
 app.use("/user", userRoute);
 app.use("/course", courseRoute);
